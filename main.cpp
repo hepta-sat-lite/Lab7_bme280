@@ -1,12 +1,25 @@
 #include "mbed.h"
+#include "BME280.h"
 
-DigitalOut myled(LED1);
+//I2Cピン定義
+#define SCL_PIN PB_6
+#define SDA_PIN PB_7
+
+I2C i2c(SDA_PIN, SCL_PIN);
+BME280 sensor(i2c); 
 
 int main() {
-  while(1) {
-    myled = 1;
-    wait(0.2);
-    myled = 0;
-    wait(0.2);
-  }
+    printf("BME280 Sensor Test\r\n");
+
+    while(1) {
+        float temp = sensor.getTemperature();
+        float humidity = sensor.getHumidity();
+        float pressure = sensor.getPressure();
+
+        printf("Temperature: %.2f C\r\n", temp);
+        printf("Humidity: %.2f \r\n", humidity);
+        printf("Pressure: %.2f hPa\r\n", pressure); //hPa単位で取得できる
+
+        wait(1.0);
+    }
 }
